@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JARVIS MARK 4</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="jarvis-container">
+
+    <!-- ===== Center JARVIS Core ===== -->
+    <div class="arc-reactor">
+        <div class="ring"></div>
+        <div class="ring2"></div>
+        <div class="core"></div>
+        <h1 class="jarvis-title">J A R V I S  -  M A R K  IV</h1>
+    </div>
+
+    <!-- ===== Widget HUD ===== -->
+    <div class="hud-grid">
+        <div class="widget" id="timeWidget">
+            <h3>Time</h3>
+            <div id="clockDisplay">--:--:--</div>
+            <div id="dateDisplay"></div>
+        </div>
+
+        <div class="widget" id="weatherWidget">
+            <h3>Weather</h3>
+            <div>City: <span id="weatherCity">Demo</span></div>
+            <div>Temp: <span id="weatherTemp">--°</span></div>
+            <div>Condition: <span id="weatherCond">Clear</span></div>
+        </div>
+
+        <div class="widget" id="calculatorWidget">
+            <h3>Calculator</h3>
+            <input type="text" id="calcInput">
+            <button onclick="calcSolve()">=</button>
+        </div>
+
+        <div class="widget" id="newsWidget">
+            <h3>News</h3>
+            <ul id="newsList">
+                <li>Jarvis UI update successful.</li>
+                <li>Future integration available.</li>
+                <li>Clickable feeds soon.</li>
+            </ul>
+        </div>
+
+        <div class="widget" id="noteWidget">
+            <h3>Notepad</h3>
+            <textarea id="noteArea" placeholder="Write notes..."></textarea>
+        </div>
+
+        <div class="widget" id="speedWidget">
+            <h3>Internet Speed</h3>
+            <p>Download: <span id="dlSpeed">-- Mbps</span></p>
+            <p>Upload: <span id="ulSpeed">-- Mbps</span></p>
+        </div>
+    </div>
+
+    <!-- ===== Modes Menu ===== -->
+    <div class="mode-menu">
+        <button onclick="openModes()">MODES</button>
+        <div id="modePanel" class="mode-panel hidden">
+            <h2>Modes</h2>
+            <button onclick="switchMode('voice')">Voice</button>
+            <button onclick="switchMode('chat')">Chat</button>
+            <button onclick="switchMode('vision')">Vision</button>
+            <button onclick="switchMode('blueprint')">Blueprint</button>
+            <button onclick="switchMode('printer')">Printer</button>
+            <button onclick="switchMode('coding')">Coding</button>
+            <button onclick="switchMode('task')">Task Assistant</button>
+            <button onclick="switchMode('projector')">Projector</button>
+            <button onclick="switchMode('home')">Home Control</button>
+        </div>
+    </div>
+
+    <!-- Console -->
+    <div class="console">
+        <div id="consoleLog"></div>
+        <input id="consoleInput" placeholder="Speak or type commands...">
+        <button onclick="sendCmd()">Send</button>
+    </div>
+
+</div>
+<script src="script.js"></script>
+</body>
+</html>
