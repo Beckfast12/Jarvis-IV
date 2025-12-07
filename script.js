@@ -1,265 +1,197 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+// ====== GET ELEMENTS ======
+const clockDisplay = document.getElementById("clockDisplay");
+const dateDisplay = document.getElementById("dateDisplay");
+const consoleLog = document.getElementById("consoleLog");
+const consoleInput = document.getElementById("consoleInput");
+const modePanel = document.getElementById("modePanel");
+const calcInput = document.getElementById("calcInput");
+const noteArea = document.getElementById("noteArea");
+const newsList = document.getElementById("newsList");
+const jarvisTitle = document.querySelector(".jarvis-title");
+
+let currentMode = "idle";
+
+// ====== CLOCK ======
+setInterval(() => {
+  const t = new Date();
+  clockDisplay.textContent = t.toLocaleTimeString();
+  dateDisplay.textContent = t.toDateString();
+}, 1000);
+
+// ====== LOG TO CONSOLE ======
+function log(text) {
+  const e = document.createElement("div");
+  e.innerText = "> " + text;
+  consoleLog.appendChild(e);
+  consoleLog.scrollTop = consoleLog.scrollHeight;
 }
 
-body {
-  background: #000;
-  font-family: "Segoe UI", system-ui, sans-serif;
-  color: #00eaff;
-  overflow: hidden;
-}
-
-/* MAIN CONTAINER */
-.jarvis-container {
-  width: 100vw;
-  height: 100vh;
-  position: relative;
-  background: radial-gradient(circle at center, #001822 0%, #000 60%);
-}
-
-/* HUD CENTER CIRCLE */
-.hud-center {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 420px;
-  height: 420px;
-  pointer-events: none;
-}
-
-.hud-ring {
-  position: absolute;
-  border-radius: 50%;
-  border: 2px solid #00eaff;
-  box-shadow: 0 0 20px #00eaff;
-}
-
-.hud-ring.outer {
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  animation: spin 14s linear infinite;
-}
-
-.hud-ring.inner {
-  width: 65%;
-  height: 65%;
-  top: 17.5%;
-  left: 17.5%;
-  animation: spin 9s linear reverse infinite;
-}
-
-.hud-core {
-  position: absolute;
-  width: 32%;
-  height: 32%;
-  top: 34%;
-  left: 34%;
-  border-radius: 50%;
-  background: radial-gradient(circle, #00eaff, #004458);
-  box-shadow: 0 0 45px #00eaff;
-}
-
-/* WIDGET GRID */
-.hud-grid {
-  position: absolute;
-  top: 8%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 90%;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-  gap: 18px;
-}
-
-.widget {
-  background: radial-gradient(circle at top left, #002633 0, #000b10 60%);
-  border: 1px solid #00eaff;
-  border-radius: 18px;
-  padding: 12px 16px;
-  box-shadow: 0 0 12px rgba(0, 234, 255, 0.2);
-}
-
-.widget h3 {
-  text-align: center;
-  color: #00eaff;
-  margin-bottom: 8px;
-  font-size: 1.05rem;
-}
-
-.widget input,
-.widget textarea {
-  width: 100%;
-  background: rgba(0, 0, 0, 0.9);
-  border: 1px solid #00eaff;
-  color: #00eaff;
-  padding: 4px 6px;
-  border-radius: 6px;
-  font-size: 0.9rem;
-}
-
-.widget textarea {
-  resize: none;
-  height: 70px;
-}
-
-.widget button {
-  margin-top: 6px;
-  padding: 4px 10px;
-  border-radius: 6px;
-  border: 1px solid #00eaff;
-  background: #00141e;
-  color: #00eaff;
-  cursor: pointer;
-  font-size: 0.85rem;
-}
-
-.widget button:hover {
-  background: #003242;
-}
-
-/* TITLE */
-.jarvis-title {
-  position: absolute;
-  bottom: 18%;
-  width: 100%;
-  text-align: center;
-  letter-spacing: 0.75em;
-  text-indent: 0.75em;
-  font-size: 1.1rem;
-  color: #00eaff;
-}
-
-/* MODES MENU */
-.mode-menu {
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-}
-
-.mode-menu > button {
-  background: #001018;
-  border: 1px solid #00eaff;
-  padding: 10px 16px;
-  border-radius: 8px;
-  color: #00eaff;
-  cursor: pointer;
-  font-size: 0.9rem;
-}
-
-.mode-menu > button:hover {
-  background: #003344;
-}
-
-.mode-panel {
-  background: #001018;
-  border: 1px solid #00eaff;
-  margin-top: 10px;
-  padding: 10px;
-  border-radius: 8px;
-  width: 220px;
-}
-
-.mode-panel h2 {
-  font-size: 0.9rem;
-  margin-bottom: 6px;
-  text-align: center;
-}
-
-.mode-panel button {
-  width: 100%;
-  margin: 4px 0;
-  padding: 6px;
-  background: #000;
-  border-radius: 6px;
-  border: 1px solid #00eaff;
-  color: #00eaff;
-  cursor: pointer;
-  font-size: 0.8rem;
-}
-
-.mode-panel button:hover {
-  background: #003344;
-}
-
-.hidden {
-  display: none;
-}
-
-/* CONSOLE */
-.console {
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-  width: 380px;
-  background: rgba(0, 12, 20, 0.86);
-  padding: 10px;
-  border-radius: 12px;
-  border: 1px solid #00eaff;
-  box-shadow: 0 0 14px rgba(0, 234, 255, 0.3);
-}
-
-#consoleLog {
-  height: 150px;
-  overflow-y: auto;
-  font-size: 0.8rem;
-  border-bottom: 1px solid #00eaff;
-  margin-bottom: 6px;
-  padding-bottom: 4px;
-}
-
-#consoleInput {
-  width: 100%;
-  background: #000;
-  border: 1px solid #00eaff;
-  color: #00eaff;
-  padding: 4px 6px;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  margin-bottom: 4px;
-}
-
-.console button {
-  margin-top: 2px;
-  padding: 4px 10px;
-  border-radius: 6px;
-  border: 1px solid #00eaff;
-  background: #00141e;
-  color: #00eaff;
-  cursor: pointer;
-  font-size: 0.8rem;
-}
-
-.console button:hover {
-  background: #003344;
-}
-
-.console-hint {
-  margin-top: 4px;
-  font-size: 0.7rem;
-  color: #66e9ff;
-}
-
-.console-hint code {
-  color: #00eaff;
-}
-
-/* ANIMATIONS */
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
+// ====== TEXT TO SPEECH ======
+function speak(text) {
+  if (!("speechSynthesis" in window)) {
+    log("Jarvis (no voice): " + text);
+    return;
   }
-  100% {
-    transform: rotate(360deg);
+  const msg = new SpeechSynthesisUtterance(text);
+  msg.pitch = 1;
+  msg.rate = 1;
+  msg.volume = 1;
+  speechSynthesis.speak(msg);
+  log("Jarvis: " + text);
+}
+
+// ====== MODES ======
+function updateTitleForMode(mode) {
+  jarvisTitle.textContent =
+    "J A R V I S  -  M A R K  I V   //   " + mode.toUpperCase() + " MODE";
+}
+
+function switchMode(mode) {
+  currentMode = mode;
+  updateTitleForMode(mode);
+  log("Switching to " + mode + " mode...");
+  speak("Switching to " + mode + " mode.");
+
+  // Update the News / Notepad depending on mode
+  if (mode === "voice") {
+    newsList.innerHTML = "<li>Voice mode ready.</li><li>Press V and speak.</li>";
+  } else if (mode === "chat") {
+    newsList.innerHTML = "<li>Chat mode active.</li><li>Use the console to talk.</li>";
+  } else if (mode === "vision") {
+    newsList.innerHTML = "<li>Vision mode placeholder.</li><li>Camera can be added later.</li>";
+  } else if (mode === "blueprint") {
+    newsList.innerHTML = "<li>Blueprint mode active.</li><li>Describe what you want to build.</li>";
+    noteArea.value = "Example: Arc Reactor layout, Mark IV armor sections...";
+  } else if (mode === "printer") {
+    newsList.innerHTML =
+      "<li>Printer mode (demo).</li><li>Estimated print time: 30 minutes.</li>";
+  } else if (mode === "coding") {
+    newsList.innerHTML =
+      "<li>Coding mode.</li><li>Use notepad for code notes or snippets.</li>";
+  } else if (mode === "task") {
+    newsList.innerHTML =
+      "<li>Task Assistant mode.</li><li>Use notepad as your TODO list.</li>";
+  } else if (mode === "projector") {
+    newsList.innerHTML =
+      "<li>Projector mode.</li><li>Press F11 and move this window to your projector display.</li>";
+  } else if (mode === "home") {
+    newsList.innerHTML =
+      "<li>Home Control placeholder.</li><li>Future: smart lights, plugs, etc.</li>";
+  }
+
+  modePanel.classList.add("hidden");
+}
+
+// make available for HTML onclick
+window.switchMode = switchMode;
+
+// ====== OPEN / CLOSE MODE PANEL ======
+function openModes() {
+  modePanel.classList.toggle("hidden");
+}
+window.openModes = openModes;
+
+// ====== COMMAND HANDLER ======
+function handleCommand(cmd) {
+  const text = cmd.toLowerCase();
+
+  if (text.includes("hello") || text.includes("hi")) {
+    speak("Hello. How can I assist?");
+    return;
+  }
+
+  if (text.includes("time")) {
+    speak("The current time is " + clockDisplay.textContent);
+    return;
+  }
+
+  if (text.includes("blueprint")) {
+    switchMode("blueprint");
+    return;
+  }
+
+  if (text.includes("print")) {
+    switchMode("printer");
+    return;
+  }
+
+  if (text.includes("projector")) {
+    switchMode("projector");
+    speak("Use F11 to enter fullscreen on your projector.");
+    return;
+  }
+
+  if (text.includes("voice mode")) {
+    switchMode("voice");
+    return;
+  }
+
+  if (text.includes("chat mode")) {
+    switchMode("chat");
+    return;
+  }
+
+  // fallback
+  speak("Command received, but I don't have that function yet.");
+}
+
+// ====== SEND BUTTON ======
+function sendCmd() {
+  const cmd = consoleInput.value.trim();
+  if (!cmd) return;
+  log(cmd);
+  consoleInput.value = "";
+  handleCommand(cmd);
+}
+window.sendCmd = sendCmd;
+
+// ENTER key sends command
+consoleInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    sendCmd();
+  }
+});
+
+// ====== CALCULATOR ======
+function calcSolve() {
+  try {
+    calcInput.value = eval(calcInput.value || "0");
+  } catch (e) {
+    calcInput.value = "Error";
   }
 }
+window.calcSolve = calcSolve;
 
-    try{calcInput.value=eval(calcInput.value);}
-    catch{calcInput.value="Error";}
+// ====== VOICE RECOGNITION (press V) ======
+window.SpeechRecognition =
+  window.SpeechRecognition || window.webkitSpeechRecognition;
+
+if (window.SpeechRecognition) {
+  const recognizer = new SpeechRecognition();
+  recognizer.lang = "en-US";
+  recognizer.continuous = false;
+  recognizer.interimResults = false;
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key.toLowerCase() === "v") {
+      recognizer.start();
+      log("Listening... (press V and speak)");
+    }
+  });
+
+  recognizer.onresult = (event) => {
+    const voiceCMD = event.results[0][0].transcript;
+    log("Voice: " + voiceCMD);
+    handleCommand(voiceCMD);
+  };
+
+  recognizer.onerror = (e) => {
+    log("Voice error: " + e.error);
+  };
+} else {
+  log("Voice recognition not supported in this browser.");
 }
 
+// ====== STARTUP ======
+log("Jarvis Mark IV online.");
+speak("Jarvis Mark Four online.");
