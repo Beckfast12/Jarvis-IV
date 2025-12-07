@@ -1,34 +1,265 @@
-// Clock Update
-setInterval(()=>{
-    const t=new Date();
-    clockDisplay.innerText=t.toLocaleTimeString();
-    dateDisplay.innerText=t.toDateString();
-},1000);
-
-// Console Logging
-function log(text){
-    const e=document.createElement("div");
-    e.innerText="> "+text;
-    consoleLog.appendChild(e);
-    consoleLog.scrollTop=consoleLog.scrollHeight;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-function sendCmd(){
-    let cmd=consoleInput.value.toLowerCase();
-    consoleInput.value=""; 
-    log(cmd);
-
-    if(cmd.includes("blueprint")) switchMode("blueprint");
-    if(cmd.includes("weather")) log("Weather mode soon — requires API key.");
-    if(cmd.includes("print")) switchMode("printer");
+body {
+  background: #000;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  color: #00eaff;
+  overflow: hidden;
 }
 
-// Mode switch UI
-function openModes(){modePanel.classList.toggle("hidden");}
-function switchMode(m){log("Switching to "+m+" mode...");}
+/* MAIN CONTAINER */
+.jarvis-container {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  background: radial-gradient(circle at center, #001822 0%, #000 60%);
+}
 
-// Calculator
-function calcSolve(){
+/* HUD CENTER CIRCLE */
+.hud-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 420px;
+  height: 420px;
+  pointer-events: none;
+}
+
+.hud-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid #00eaff;
+  box-shadow: 0 0 20px #00eaff;
+}
+
+.hud-ring.outer {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  animation: spin 14s linear infinite;
+}
+
+.hud-ring.inner {
+  width: 65%;
+  height: 65%;
+  top: 17.5%;
+  left: 17.5%;
+  animation: spin 9s linear reverse infinite;
+}
+
+.hud-core {
+  position: absolute;
+  width: 32%;
+  height: 32%;
+  top: 34%;
+  left: 34%;
+  border-radius: 50%;
+  background: radial-gradient(circle, #00eaff, #004458);
+  box-shadow: 0 0 45px #00eaff;
+}
+
+/* WIDGET GRID */
+.hud-grid {
+  position: absolute;
+  top: 8%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 18px;
+}
+
+.widget {
+  background: radial-gradient(circle at top left, #002633 0, #000b10 60%);
+  border: 1px solid #00eaff;
+  border-radius: 18px;
+  padding: 12px 16px;
+  box-shadow: 0 0 12px rgba(0, 234, 255, 0.2);
+}
+
+.widget h3 {
+  text-align: center;
+  color: #00eaff;
+  margin-bottom: 8px;
+  font-size: 1.05rem;
+}
+
+.widget input,
+.widget textarea {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  border: 1px solid #00eaff;
+  color: #00eaff;
+  padding: 4px 6px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.widget textarea {
+  resize: none;
+  height: 70px;
+}
+
+.widget button {
+  margin-top: 6px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid #00eaff;
+  background: #00141e;
+  color: #00eaff;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.widget button:hover {
+  background: #003242;
+}
+
+/* TITLE */
+.jarvis-title {
+  position: absolute;
+  bottom: 18%;
+  width: 100%;
+  text-align: center;
+  letter-spacing: 0.75em;
+  text-indent: 0.75em;
+  font-size: 1.1rem;
+  color: #00eaff;
+}
+
+/* MODES MENU */
+.mode-menu {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+}
+
+.mode-menu > button {
+  background: #001018;
+  border: 1px solid #00eaff;
+  padding: 10px 16px;
+  border-radius: 8px;
+  color: #00eaff;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.mode-menu > button:hover {
+  background: #003344;
+}
+
+.mode-panel {
+  background: #001018;
+  border: 1px solid #00eaff;
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  width: 220px;
+}
+
+.mode-panel h2 {
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+.mode-panel button {
+  width: 100%;
+  margin: 4px 0;
+  padding: 6px;
+  background: #000;
+  border-radius: 6px;
+  border: 1px solid #00eaff;
+  color: #00eaff;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.mode-panel button:hover {
+  background: #003344;
+}
+
+.hidden {
+  display: none;
+}
+
+/* CONSOLE */
+.console {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  width: 380px;
+  background: rgba(0, 12, 20, 0.86);
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid #00eaff;
+  box-shadow: 0 0 14px rgba(0, 234, 255, 0.3);
+}
+
+#consoleLog {
+  height: 150px;
+  overflow-y: auto;
+  font-size: 0.8rem;
+  border-bottom: 1px solid #00eaff;
+  margin-bottom: 6px;
+  padding-bottom: 4px;
+}
+
+#consoleInput {
+  width: 100%;
+  background: #000;
+  border: 1px solid #00eaff;
+  color: #00eaff;
+  padding: 4px 6px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  margin-bottom: 4px;
+}
+
+.console button {
+  margin-top: 2px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid #00eaff;
+  background: #00141e;
+  color: #00eaff;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.console button:hover {
+  background: #003344;
+}
+
+.console-hint {
+  margin-top: 4px;
+  font-size: 0.7rem;
+  color: #66e9ff;
+}
+
+.console-hint code {
+  color: #00eaff;
+}
+
+/* ANIMATIONS */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
     try{calcInput.value=eval(calcInput.value);}
     catch{calcInput.value="Error";}
 }
+
